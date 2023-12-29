@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from 'react'
 import './App.css'
+import Explorer from './component/Explorer'
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      searchQuery: '',
+    }
+  }
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  setSearchQuery = (query) => {
+    this.setState({ searchQuery: query })
+  }
+
+  handleForm = (e) => {
+    e.preventDefault();
+    this.setState({ searchQuery: e.target.city.value })
+  }
+
+  handleChange = (e) => {
+    this.setState({ searchQuery: e.target.value })
+  }
+
+  render() {
+    return (
+      <>
+        <header>
+          <h1>Welcome to City Explore</h1>
+        </header>
+
+
+        {/* {this.state.searchQuery
+          ? <Explorer />
+          :<p>Please Enter a location to see results.</p>
+        } */}
+
+        <BrowserRouter>
+          <form onSubmit={this.handleForm}>
+            <input placeholder="Enter City Name" type="text" name="city" onChange={this.handleChange} />
+            <button>
+              <Link to="/search">Search!</Link>
+            </button>
+          </form>
+          <Routes>
+            <Route exact path="/search" element={<Explorer />} />
+            <Route path="/" element={<p>Please enter a location to see results</p>} />
+          </Routes>
+        </BrowserRouter>
+      </>
+    )
+  }
 }
 
 export default App
